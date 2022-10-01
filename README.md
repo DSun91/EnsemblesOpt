@@ -95,7 +95,7 @@ Common parameters for the fit method:<br/>
 | Parameter  | Usage|
 | ------------- | ------------- |
 | **"X"** | Training dataset without target variable.<br/>  |
-| **"y"** | target variable.<br/>  |
+| **"y"** | Target variable.<br/>  |
 | **"n_iters"** | Number of trials to execute optimization.<br/>  |
 | **"N_folds"** | Number of folds for cross validation.<br/> |
 | **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
@@ -188,7 +188,11 @@ from EnsemblesOpt import Optuna_Voting_weights_tuner
 Opt=Optuna_Voting_weights_tuner(scoring_metric="roc_auc",
                                 direction="maximize",
                                 problem_type='classification',
-                                models_list=classifierss,
+                                models_list=[ExtraTreeClassifier(),
+                                             DecisionTreeClassifier(),
+                                             MLPClassifier(),
+                                             SGDClassifier(),
+                                             KNeighborsClassifier()],
                                 voting_type='soft',
                                 weights_list=[1,2,3]
                                )
