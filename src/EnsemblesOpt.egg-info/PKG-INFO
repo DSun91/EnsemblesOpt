@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: EnsemblesOpt
+Version: 0.0.1
+Summary: Ensemble models creation trough Bayesian Optimization
+Author-email: Sunny Dial <dialsunny91@gmail.com>
+Project-URL: Homepage, https://github.com/DSun91/EnsemblesOpt
+Project-URL: Bug Tracker, https://github.com/DSun91/EnsemblesOpt/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: License.txt
+
+# Example Package
+
+A package for speeding up the process of finding best base learners for ensemble models trough Bayesian Optimization.
