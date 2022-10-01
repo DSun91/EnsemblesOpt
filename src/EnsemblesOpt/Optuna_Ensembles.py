@@ -31,13 +31,13 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 
 class Optuna_StackEnsemble_Search:
-    def __init__(self,scoring_metric,direction,problem_type,size_stack=3,models_list=[],meta_classifier=LogisticRegression()):
+    def __init__(self,scoring_metric,direction,problem_type,meta_learner,size_stack=3,models_list=[]):
         self.scoring_metric=scoring_metric
         self.problem_type=problem_type
         self.size_stack=size_stack
         self.models_list=models_list
         self.direction=direction
-        self.meta_classifier=meta_classifier
+        self.meta_learner=meta_learner
         self.Regressors=[
              ExtraTreeRegressor(),
              DecisionTreeRegressor(),
@@ -152,9 +152,9 @@ class Optuna_StackEnsemble_Search:
             print("    {}: {}".format(key, value))
             
         if self.problem_type=='classification':
-            return StackingClassifier(estimators=best_stack,final_estimator=self.meta_classifier),study_stacking
+            return StackingClassifier(estimators=best_stack,final_estimator=self.meta_learner),study_stacking
         else:
-            return StackingRegressor(estimators=best_stack,final_estimator=self.meta_classifier),study_stacking
+            return StackingRegressor(estimators=best_stack,final_estimator=self.meta_learner),study_stacking
 
 
 #///////////////////////////////////// VOTING ///////////////////////////////////////////////////////////////////
@@ -313,7 +313,7 @@ class Optuna_Voting_weights_tuner:
             
         return np.mean(scores)
         
-    def stack_best_weights(self,X,y,
+    def fit(self,X,y,
                     n_trials,
                     N_folds=3,
                     stratify=False):
