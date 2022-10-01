@@ -14,7 +14,7 @@ from sklearn.model_selection import StratifiedKFold
 
 class Bayesian_Voting_Ensemble:
     
-    def __init__(self,ensemble_size,list_classifiers,xi,random_init_points,scoring,maximize_obj,task):
+    def __init__(self,ensemble_size,list_classifiers,xi,random_init_points,scoring,maximize_obj,task,type_p='soft'):
         self.size_problem=ensemble_size
         self.list_classifiers=list_classifiers
         self.xi=xi
@@ -28,6 +28,7 @@ class Bayesian_Voting_Ensemble:
         self.points_done=[]
         self.points_vs=dict()
         self.counter=0
+        self.type_p=type_p
         
     def fit(self,X_train,y_train,n_iters,Nfold,stratify=False):
         self.X_train=X_train
@@ -111,7 +112,7 @@ class Bayesian_Voting_Ensemble:
                 voting_stack.append(('C'+str(j)+'_'+str(counter),self.db[int(j)]))
                 counter+=1
             if self.task=='classification':
-                eclf1 = VotingClassifier(estimators=voting_stack,voting='soft')
+                eclf1 = VotingClassifier(estimators=voting_stack,voting=self.type_p)
             else:
                 eclf1 = VotingRegressor(estimators=voting_stack)
             
