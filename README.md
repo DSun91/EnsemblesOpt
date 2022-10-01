@@ -128,7 +128,7 @@ Common parameters for the Optuna_StackEnsemble_Search class:<br/>
 | **"scoring_metric"**  | Metric to optimize.<br/>  |
 | **"problem_type"**  | Equals "classification" or "regression".<br/>  |
 | **"direction"**  | Equals "maximize" or "minimize".<br/>  |
-| **"meta_learner"**  | Meta learner for the stack ensemble.<br/>  |
+| **"meta_learner"**  | Meta learner for the stack ensemble, if not provided Optuna will search for one from the base models.<br/>  |
 
 
 Common parameters for the fit method:<br/>
