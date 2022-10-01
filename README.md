@@ -17,11 +17,9 @@ Install by running:
 ```
 !pip install EnsemblesOpt
 ```
-
-## Bayesian optimization search code snippet:
-
+# Code Snippets
+First import the base models from where to search for the best ensemble of a given size
 ```
-#import the base models from where to search for the best ensemble of a given size
 
 from sklearn.tree import ExtraTreeClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -30,7 +28,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import SGDClassifier
 ```
 
-
+## Bayesian optimization search:
 ```
 #initialize the Bayesian_Voting_Ensemble
 from EnsemblesOpt import Bayesian_Voting_Ensemble
