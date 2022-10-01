@@ -21,5 +21,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/DSun91/EnsembleOpt/tree/main/EnsembleOpt"
-"Bug Tracker" = "https://github.com/DSun91/EnsembleOpt/tree/main/EnsembleOpt/issues"
+"Homepage" = "https://github.com/DSun91/EnsemblesOpt"
+"Bug Tracker" = "https://github.com/DSun91/EnsemblesOpt/issues"
