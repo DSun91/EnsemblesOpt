@@ -11,17 +11,38 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import VotingClassifier,VotingRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
+from sklearn.tree import ExtraTreeClassifier,ExtraTreeRegressor
+from sklearn.tree import DecisionTreeClassifier,DecisionTreeRegressor
+from sklearn.neural_network import MLPClassifier,MLPRegressor
+from sklearn.neighbors import KNeighborsClassifier,KNeighborsRegressor
+from sklearn.linear_model import SGDClassifier,SGDRegressor
+from sklearn.linear_model import PassiveAggressiveClassifier,PassiveAggressiveRegressor  
+from sklearn.ensemble import AdaBoostClassifier,AdaBoostRegressor
+from sklearn.ensemble import GradientBoostingClassifier,GradientBoostingRegressor
+from sklearn.ensemble import BaggingClassifier,BaggingRegressor
+from sklearn.ensemble import ExtraTreesClassifier,ExtraTreesRegressor
+from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.calibration import CalibratedClassifierCV
+from xgboost import XGBClassifier,XGBRegressor
+from lightgbm import LGBMClassifier,LGBMRegressor
+from catboost import CatBoostClassifier,CatBoostRegressor
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 class Bayesian_Voting_Ensemble:
     
-    def __init__(self,ensemble_size,list_classifiers,xi,random_init_points,scoring,maximize_obj,task,type_p='soft'):
+    def __init__(self,ensemble_size,models_list,xi,random_init_points,scoring,maximize_obj,task,type_p='soft'):
         self.size_problem=ensemble_size
-        self.list_classifiers=list_classifiers
+        self.models_lists=models_list
         self.xi=xi
         self.random_init_points=random_init_points
         self.maximize_obj=maximize_obj
         self.db=dict()
-        self.load_dict_classifiers(self.list_classifiers)
+        self.load_dict_models(self.models_list)
         self.space_dim=len(self.db)-1
         self.scoring=scoring
         self.task=task
@@ -29,6 +50,43 @@ class Bayesian_Voting_Ensemble:
         self.points_vs=dict()
         self.counter=0
         self.type_p=type_p
+        self.Regressors=[
+             ExtraTreeRegressor(),
+             DecisionTreeRegressor(),
+             MLPRegressor(),
+             KNeighborsRegressor(),
+             XGBRegressor(),
+             AdaBoostRegressor(),
+             GradientBoostingRegressor(),
+             BaggingRegressor(),
+             ExtraTreesRegressor(),
+             RandomForestRegressor(),
+             LinearDiscriminantAnalysis(),
+             LogisticRegression(),
+             LGBMRegressor(),
+             CatBoostRegressor(),
+             ]
+        self.Classifiers=[
+             ExtraTreeClassifier(),
+             DecisionTreeClassifier(),
+             MLPClassifier(),
+             #RadiusNeighborsClassifier(),
+             KNeighborsClassifier(),
+             CalibratedClassifierCV(base_estimator=SGDClassifier(class_weight='balanced'), method='sigmoid'),
+             XGBClassifier(),
+             CalibratedClassifierCV(base_estimator=PassiveAggressiveClassifier(), method='sigmoid'),
+             AdaBoostClassifier(),
+             GradientBoostingClassifier(),
+             BaggingClassifier(),
+             ExtraTreesClassifier(),
+             RandomForestClassifier(),
+             BernoulliNB(),
+             CalibratedClassifierCV(),
+             GaussianNB(),
+             #LinearDiscriminantAnalysis(),
+             LogisticRegression(),
+             LGBMClassifier(),
+             CatBoostClassifier()]
         
     def fit(self,X_train,y_train,n_iters,Nfold,stratify=False):
         self.X_train=X_train
@@ -96,9 +154,18 @@ class Bayesian_Voting_Ensemble:
         return best_ensemble
 
     
-    def load_dict_classifiers(self,list_classifiers):
-        for i in range(len(list_classifiers)):
-            self.db[i]=self.list_classifiers[i]
+    def load_dict_models(self,list_models):
+        if len(list_models)>0:
+            for i in range(len(list_models)):
+                self.db[i]=self.list_models[i]
+        else:
+            if self.task=='classification':
+                for i in range(len(self.Classifiers)):
+                    self.db[i]=self.Classifiers[i]
+            else:
+                for i in range(len(self.Regressors)):
+                    self.db[i]=self.Regressors[i]
+
         #print(self.db)
         return self.db
     
