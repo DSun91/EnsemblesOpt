@@ -49,9 +49,10 @@ BS=Bayesian_Voting_Ensemble(ensemble_size=2,
 #fit the Bayesian_Voting_Ensemble                         
 BS.fit(X,y,
        Nfold=5,
-       n_iters=50,
+       n_iters=9,
        stratify=True)
-       
+``` 
+```
 Output:
 Collecting initial random points...
 Searching best ensemble...
@@ -76,23 +77,142 @@ best score 0.887221833391049
 ```
 
 Common parameters for the Bayesian_Voting_Ensemble class:<br/>
--**"ensemble_size"**: number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>
--**"list_classifiers"**: list of classifiers.<br/>
--**"xi"**: Exploration parameter, higher values lead to more explorative behaviour and viceversa for lower value (default xi=0.01) .<br/>
--**"random_init_points"**: number of initial points to take from the objective function.<br/>
--**"maximize_obj"**: whether to maximize or minimize the objective function [True or False].<br/>
--**"scoring"**: metric to optimize.<br/>
--**"task"**:"classification" or "regression".<br/>
+
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"ensemble_size"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
+| **"ensemble_size"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
+| **"list_classifiers"**  | List of classifiers.<br/> |
+| **"xi"**  | Exploration parameter, higher values lead to more explorative behaviour and viceversa for lower value (default xi=0.01) .<br/>  |
+| **"random_init_points"**  | Number of initial points to take from the objective function.<br/>  |
+| **"maximize_obj"**  | Whether to maximize or minimize the objective function [True or False].<br/>  |
+| **"scoring"**  | Metric to optimize.<br/>  |
+| **"task"**  | Equals "classification" or "regression".<br/>  |
+| **"type_p"**  | Only in case of classification problem chose 'soft' or 'hard' or "regression".<br/>  |
+
 
 Common parameters for the fit method:<br/>
--**"X"**: training dataset without target variable.<br/>
--**"y"**: target variable.<br/>
--**"n_iters"**: number of trials to execute optimization.<br/>
--**"N_folds"**: number of folds for cross validation.<br/>
--**"stratify"**: stratify cv splits based on target distribuition [True or False]<br/>
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"X"** | Training dataset without target variable.<br/>  |
+| **"y"** | target variable.<br/>  |
+| **"n_iters"** | Number of trials to execute optimization.<br/>  |
+| **"N_folds"** | Number of folds for cross validation.<br/> |
+| **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
 
-The 'scoring' parameter takes the same values from sklearn API (link of available list: https://scikit-learn.org/stable/modules/model_evaluation.html)
+The **'scoring'** parameter takes the same values from sklearn API (link of available list: https://scikit-learn.org/stable/modules/model_evaluation.html)
+
+## Optuna best stacking ensemble search:
+``` 
+from EnsemblesOpt import Optuna_StackEnsemble_Search
+
+Opt=Optuna_StackEnsemble_Search(scoring_metric="roc_auc",
+                                direction="maximize",
+                                problem_type='classification',
+                                size_stack=2,
+                                models_list=[ExtraTreeClassifier(),
+                                             DecisionTreeClassifier(),
+                                             MLPClassifier(),
+                                             SGDClassifier(),
+                                             KNeighborsClassifier()],
+                                             meta_learner=LogisticRegression())
+
+Opt.fit(X,y,n_trials=50,N_folds=3,stratify=True)
+```
+Common parameters for the Optuna_StackEnsemble_Search class:<br/>
+
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"size_stack"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
+| **"models_list"**  | List of base models.<br/> |
+| **"scoring_metric"**  | Metric to optimize.<br/>  |
+| **"problem_type"**  | Equals "classification" or "regression".<br/>  |
+| **"direction"**  | Equals "maximize" or "minimize".<br/>  |
+| **"meta_learner"**  | Meta learner for the stack ensemble.<br/>  |
 
 
+Common parameters for the fit method:<br/>
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"X"** | Training dataset without target variable.<br/>  |
+| **"y"** | target variable.<br/>  |
+| **"n_iters"** | Number of trials to execute optimization.<br/>  |
+| **"N_folds"** | Number of folds for cross validation.<br/> |
+| **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
+
+## Optuna best voting ensemble search:
+scoring_metric,direction,problem_type,ensemble_size=3,voting_type=None,models_list=[]
+``` 
+from EnsemblesOpt import Optuna_VotingEnsemble_Search
+
+Opt=Optuna_VotingEnsemble_Search(scoring_metric="roc_auc",direction="maximize",
+                                problem_type='classification',
+                                ensemble_size=2,
+                                models_list=[ExtraTreeClassifier(),
+                                             DecisionTreeClassifier(),
+                                             MLPClassifier(),
+                                             SGDClassifier(),
+                                             KNeighborsClassifier()],
+                                voting_type='soft'
+                               )
+Opt.fit(X,y,n_trials=10,
+            N_folds=3,
+            stratify=True)
+```
+Common parameters for the Optuna_StackEnsemble_Search class:<br/>
+scoring_metric,direction,problem_type,size_stack=3,models_list=[]
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"ensemble_size"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
+| **"models_list"**  | List of base models.<br/> |
+| **"scoring_metric"**  | Metric to optimize.<br/>  |
+| **"problem_type"**  | Equals "classification" or "regression".<br/>  |
+| **"direction"**  | Equals "maximize" or "minimize".<br/>  |
+| **"voting_type"**  | Voting type 'soft' or 'hard'.<br/>  |
 
 
+Common parameters for the fit method:<br/>
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"X"** | Training dataset without target variable.<br/>  |
+| **"y"** | target variable.<br/>  |
+| **"n_iters"** | Number of trials to execute optimization.<br/>  |
+| **"N_folds"** | Number of folds for cross validation.<br/> |
+| **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
+
+## Optuna search best weights for voting ensemble:
+
+``` 
+from EnsemblesOpt import Optuna_Voting_weights_tuner
+
+Opt=Optuna_Voting_weights_tuner(scoring_metric="roc_auc",
+                                direction="maximize",
+                                problem_type='classification',
+                                models_list=classifierss,
+                                voting_type='soft',
+                                weights_list=[1,2,3]
+                               )
+Opt.fit(X,y,n_trials=10,
+        N_folds=3,
+        stratify=True)
+```
+Common parameters for the Optuna_StackEnsemble_Search class:<br/>
+
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"models_list"**  | List of base models.<br/> |
+| **"scoring_metric"**  | Metric to optimize.<br/>  |
+| **"problem_type"**  | Equals "classification" or "regression".<br/>  |
+| **"direction"**  | Equals "maximize" or "minimize".<br/>  |
+| **"voting_type"**  | Voting type 'soft' or 'hard'.<br/>  |
+| **"weights_list"**  | Weights to test out type list of integers or floats ex. [0,1,2,3,...] .<br/>  |
+
+
+Common parameters for the fit method:<br/>
+| Parameter  | Usage|
+| ------------- | ------------- |
+| **"X"** | Training dataset without target variable.<br/>  |
+| **"y"** | target variable.<br/>  |
+| **"n_iters"** | Number of trials to execute optimization.<br/>  |
+| **"N_folds"** | Number of folds for cross validation.<br/> |
+| **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
