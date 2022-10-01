@@ -10,7 +10,7 @@
 </p>
 
 This repository contains the project for a package for speeding up the process of finding best base learners for building ensemble models trough Bayesian Optimization using Gaussian Processes as surrogate function and Expected Improvement as acquisition function, along optimization routines developed using Optuna library.<br/>
-The black-box function is defined as the n cross-validation score of the chosen evaluation metric for the ensemble considered during the iteration and each base model is assigned to.
+The black-box function is defined as the n cross-validation score of the chosen evaluation metric for the ensemble considered during the iteration. Each base model is mapped to an integer value and their combination is passed to the objective function for evaluation.
 
 Install by running:
 
