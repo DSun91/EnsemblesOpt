@@ -67,9 +67,14 @@ Searching best ensemble...
 -trial  7 |Score value: 0.887221833391049
 -trial  8 |Score value: 0.8534670721947504
 -trial  9 |Score value: 0.8283346726135243
-.
-.
-.
+Best Ensemble:
+ [LGBMClassifier(bagging_fraction=0.9861531786655775, bagging_freq=3,
+               feature_fraction=0.14219334035549125,
+               lambda_l1=7.009080384469092e-07, lambda_l2=5.029465681170278e-06,
+               learning_rate=0.08695762873585877, max_bin=1255,
+               min_child_samples=93, n_estimators =316, num_leaves=38,
+               silent='warn'), GradientBoostingClassifier()] 
+best score 0.887221833391049
 ```
 
 Common parameters for the Bayesian_Voting_Ensemble class:<br/>
