@@ -18,7 +18,7 @@ Install by running:
 !pip install EnsemblesOpt
 ```
 
-Code snippet:
+## Bayesian optimization search code snippet:
 
 ```
 #import the base models from where to search for the best ensemble of a given size
