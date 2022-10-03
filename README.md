@@ -35,7 +35,7 @@ from EnsemblesOpt import Bayesian_Voting_Ensemble
 
 
 BS=Bayesian_Voting_Ensemble(ensemble_size=2,
-                            list_classifiers=[ExtraTreeClassifier(),
+                            models_list=[ExtraTreeClassifier(),
                                              DecisionTreeClassifier(),
                                              MLPClassifier(),
                                              SGDClassifier(),
@@ -44,7 +44,8 @@ BS=Bayesian_Voting_Ensemble(ensemble_size=2,
                            random_init_points=7,
                            maximize_obj=True,
                            scoring='roc_auc',
-                           task='classification')
+                           task='classification',
+                           acquisition_func='EI')
                            
 #fit the Bayesian_Voting_Ensemble                         
 BS.fit(X,y,
@@ -82,13 +83,14 @@ Common parameters for the Bayesian_Voting_Ensemble class:<br/>
 | ------------- | ------------- |
 | **"ensemble_size"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
 | **"ensemble_size"**  | Number of base estimators to build the ensemble, the bigger the ensemble the more time consuming and complex the final model will be.<br/>  |
-| **"list_classifiers"**  | List of classifiers.<br/> |
+| **"models_list"**  | List of base models. If value provided is "None" preloaded list of models will be used.<br/> |
 | **"xi"**  | Exploration parameter, higher values lead to more explorative behaviour and viceversa for lower value (default xi=0.01) .<br/>  |
 | **"random_init_points"**  | Number of initial points to take from the objective function.<br/>  |
 | **"maximize_obj"**  | Whether to maximize or minimize the objective function [True or False].<br/>  |
 | **"scoring"**  | Metric to optimize.<br/>  |
 | **"task"**  | Equals "classification" or "regression".<br/>  |
-| **"type_p"**  | Only in case of classification problem chose 'soft' or 'hard' or "regression".<br/>  |
+| **"type_p"**  | Only in case of classification problem select 'soft' or 'hard'.<br/>  |
+| **"acquisition_func"**  | Acquisition function choose between "PI" (probability of improvement), "EI" (expected improvement) or "UCB" (upper confidence bound)<br/>  
 
 
 Common parameters for the fit method:<br/>
@@ -141,7 +143,7 @@ Common parameters for the fit method:<br/>
 | **"stratify"** | Stratify cv splits based on target distribuition [True or False]<br/>  |
 
 ## Optuna best voting ensemble search:
-scoring_metric,direction,problem_type,ensemble_size=3,voting_type=None,models_list=[]
+
 ``` 
 from EnsemblesOpt import Optuna_VotingEnsemble_Search
 
