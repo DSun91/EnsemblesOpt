@@ -124,7 +124,7 @@ class Bayesian_Voting_Ensemble:
                 eclf1 = VotingRegressor(estimators=voting_stack)
             
             if self.stratify==True:
-                cv =StratifiedKFold(n_splits=2,shuffle=True)
+                cv =StratifiedKFold(n_splits=self.Nfold,shuffle=True)
             else:
                 cv=self.Nfold
             scores=cross_val_score(eclf1,self.X_train,self.y_train, scoring=self.scoring, cv=cv, n_jobs=-1,error_score="raise")  
