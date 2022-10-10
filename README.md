@@ -48,7 +48,7 @@ BS=Bayesian_Voting_Ensemble(ensemble_size=2,
                            acquisition_func='EI')
                            
 #fit the Bayesian_Voting_Ensemble                         
-BS.fit(X,y,
+Best_model = BS.fit(X,y,
        Nfold=5,
        n_iters=9,
        stratify=True)
@@ -119,7 +119,7 @@ Opt=Optuna_StackEnsemble_Search(scoring_metric="roc_auc",
                                              KNeighborsClassifier()],
                                              meta_learner=LogisticRegression())
 
-Opt.fit(X,y,n_trials=50,N_folds=3,stratify=True)
+Best_model, study = Opt.fit(X,y,n_trials=50,N_folds=3,stratify=True)
 ```
 Common parameters for the Optuna_StackEnsemble_Search class:<br/>
 
@@ -157,7 +157,7 @@ Opt=Optuna_VotingEnsemble_Search(scoring_metric="roc_auc",direction="maximize",
                                              KNeighborsClassifier()],
                                 voting_type='soft'
                                )
-Opt.fit(X,y,n_trials=10,
+Best_model, study = Opt.fit(X,y,n_trials=10,
             N_folds=3,
             stratify=True)
 ```
@@ -198,7 +198,7 @@ Opt=Optuna_Voting_weights_tuner(scoring_metric="roc_auc",
                                 voting_type='soft',
                                 weights_list=[1,2,3]
                                )
-Opt.fit(X,y,n_trials=10,
+Best_model, study = Opt.fit(X,y,n_trials=10,
         N_folds=3,
         stratify=True)
 ```
