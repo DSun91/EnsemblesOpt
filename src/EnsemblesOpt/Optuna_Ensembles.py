@@ -26,7 +26,9 @@ from xgboost import XGBClassifier,XGBRegressor
 from lightgbm import LGBMClassifier,LGBMRegressor
 from catboost import CatBoostClassifier,CatBoostRegressor
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+import warnings
 
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 
@@ -138,6 +140,7 @@ class Optuna_StackEnsemble_Search:
         
         global study_stacking
         study_stacking = optuna.create_study(direction=self.direction)
+        optuna.logging.set_verbosity(optuna.logging.INFO)
         study_stacking.optimize(func, n_trials=n_trials)
 
         print("Number of finished trials: ", len(study_stacking.trials))
@@ -216,7 +219,7 @@ class Optuna_VotingEnsemble_Search:
         for i in range(self.size_stack):
             name='estimator'+str(i+1)
             #print(name)
-            param['estimator'+str(i+1)]=trial.suggest_categorical(name, models_tps)
+            param[name]=trial.suggest_categorical(name, models_tps)
             estims.append((name,param[name][1]))
         
 
@@ -255,7 +258,9 @@ class Optuna_VotingEnsemble_Search:
         func = lambda trial: self.objective_Voting(trial,X,y,models_tps,N_folds,stratify)
         
         global study_voting
+
         study_voting = optuna.create_study(direction=self.direction)
+        optuna.logging.set_verbosity(optuna.logging.INFO)
         study_voting.optimize(func, n_trials=n_trials)
 
         print("Number of finished trials: ", len(study_voting.trials))
@@ -331,6 +336,7 @@ class Optuna_Voting_weights_tuner:
         
         global study_voting_weights
         study_voting_weights = optuna.create_study(direction=self.direction)
+        optuna.logging.set_verbosity(optuna.logging.INFO)
         study_voting_weights.optimize(func, n_trials=n_trials)
 
         print("Number of finished trials: ", len(study_voting_weights.trials))

@@ -43,8 +43,6 @@ class Bayesian_Voting_Ensemble:
         self.random_init_points=random_init_points
         self.maximize_obj=maximize_obj
         self.db=dict()
-        self.load_dict_models(self.models_list)
-        self.space_dim=len(self.db)-1
         self.scoring=scoring
         self.task=task
         self.points_done=[]
@@ -207,10 +205,11 @@ class Bayesian_Voting_Ensemble:
         self.stratify=stratify
         self.Nfold=Nfold
         init_points=[]
-        
-       
+        self.load_dict_models(self.models_list)
+        self.space_dim=len(self.db)-1
       
         for i in range(self.size_problem):
+            #print(self.space_dim,self.random_init_points)
             Xi=np.random.randint(0,self.space_dim,self.random_init_points)
             init_points.append(Xi)
 
