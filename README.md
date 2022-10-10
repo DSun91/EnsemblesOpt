@@ -15,7 +15,7 @@ The black-box function is defined as the n cross-validation score of the chosen 
 Install by running:
 
 ```
-!pip install EnsemblesOpt
+!pip install EnsemblesOpt==0.0.8
 ```
 # Code Snippets
 First import the base models from where to search for the best ensemble of a given size
