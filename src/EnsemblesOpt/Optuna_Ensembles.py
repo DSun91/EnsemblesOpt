@@ -32,7 +32,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 
-class Optuna_StackEnsemble_Searchs:
+class Optuna_StackEnsemble_Search:
     def __init__(self,scoring_metric,direction,problem_type,meta_learner,size_stack=3,models_list=[]):
         self.scoring_metric=scoring_metric
         self.problem_type=problem_type
