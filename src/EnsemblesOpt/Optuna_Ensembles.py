@@ -32,7 +32,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 
-class Optuna_StackEnsemble_Search:
+class Optuna_StackEnsemble_Searchs:
     def __init__(self,scoring_metric,direction,problem_type,meta_learner,size_stack=3,models_list=[]):
         self.scoring_metric=scoring_metric
         self.problem_type=problem_type
@@ -91,7 +91,7 @@ class Optuna_StackEnsemble_Search:
             param['estimator'+str(i+1)]=trial.suggest_categorical(name, models_tps)
             estims.append((name,param[name][1]))
         
-        if not self.meta_classifier:
+        if not self.meta_learner:
             param['meta_learner']=trial.suggest_categorical('meta_learner', models_tps)
         
 
@@ -103,8 +103,8 @@ class Optuna_StackEnsemble_Search:
 
 
         if self.problem_type=='classification':
-            if self.meta_classifier:
-                scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=self.meta_classifier),
+            if self.meta_learner:
+                scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=self.meta_learner),
                                 X,y,scoring=self.scoring_metric, error_score="raise",cv=cv, n_jobs=-1)
             else:
                 scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=param['meta_learner'][1]),
@@ -112,8 +112,8 @@ class Optuna_StackEnsemble_Search:
                 
             
         else:
-            if self.meta_classifier:
-                scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=self.meta_classifier),X,y,error_score="raise",
+            if self.meta_learner:
+                scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=self.meta_learner),X,y,error_score="raise",
                                 scoring=self.scoring_metric, cv=cv, n_jobs=-1)
             else:
                 scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=param['meta_learner'][1]),X,y,error_score="raise",
@@ -150,9 +150,12 @@ class Optuna_StackEnsemble_Search:
         print("  Value: {}".format(trial.value))
         print("  Params: ")
         best_stack=[]
-        for key, value in trial.params.items():
-            best_stack.append(value)
-            print("    {}: {}".format(key, value))
+        counter=0
+        for _,value in trial.params.items():
+            name='C'+str(counter)
+            best_stack.append([name,value[1]])
+            print("    {}: {}".format(counter, value))
+            counter+=1
             
         if self.problem_type=='classification':
             return StackingClassifier(estimators=best_stack,final_estimator=self.meta_learner),study_stacking
@@ -270,9 +273,12 @@ class Optuna_VotingEnsemble_Search:
         print("  Value: {}".format(trial.value))
         print("  Params: ")
         best_stack=[]
-        for key, value in trial.params.items():
-            best_stack.append(value)
-            print("    {}: {}".format(key, value))
+        counter=0
+        for _,value in trial.params.items():
+            name='C'+str(counter)
+            best_stack.append([name,value[1]])
+            print("    {}: {}".format(counter, value))
+            counter+=1
             
         if self.problem_type=='classification':
             return VotingClassifier(estimators=best_stack,voting=self.voting_type),study_voting
@@ -349,10 +355,17 @@ class Optuna_Voting_weights_tuner:
         for key, value in trial.params.items():
             
             print("    {}: {}".format(key, value))
+        
+        estims=[]
+        counter=0
+        for i in self.models_list:
+            estims.append(['C'+str(counter),i])
+            counter+=1
             
         if self.problem_type=='classification':
-            return VotingClassifier(estimators=self.models_list,voting=self.voting_type,weights=study_voting_weights.best_params),study_voting_weights
+            return VotingClassifier(estimators=estims,voting=self.voting_type,weights=study_voting_weights.best_params['weights']),study_voting_weights
         else:
-            return VotingRegressor(estimators=self.models_list,weights=study_voting_weights.best_params),study_voting_weights
+            return VotingRegressor(estimators=estims,weights=study_voting_weights.best_params['weights']),study_voting_weights
+            
             
 
