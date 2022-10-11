@@ -33,13 +33,14 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 class Optuna_StackEnsemble_Search:
-    def __init__(self,scoring_metric,direction,problem_type,meta_learner,size_stack=3,models_list=[]):
+    def __init__(self,scoring_metric,direction,problem_type,meta_learner,size_stack=3,models_list=[],n_avg=1):
         self.scoring_metric=scoring_metric
         self.problem_type=problem_type
         self.size_stack=size_stack
         self.models_list=models_list
         self.direction=direction
         self.meta_learner=meta_learner
+        self.n_avg=n_avg
         self.Regressors=[
              ExtraTreeRegressor(),
              DecisionTreeRegressor(),
@@ -104,22 +105,34 @@ class Optuna_StackEnsemble_Search:
 
         if self.problem_type=='classification':
             if self.meta_learner:
-                scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=self.meta_learner),
+                temp=[]
+                for i in range(self.n_avg):
+                    scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=self.meta_learner),
                                 X,y,scoring=self.scoring_metric, error_score="raise",cv=cv, n_jobs=-1)
+                    temp.append(np.mean(scores))
             else:
-                scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=param['meta_learner'][1]),
+                temp=[]
+                for i in range(self.n_avg):
+                    scores=cross_val_score(StackingClassifier(estimators=estims,final_estimator=param['meta_learner'][1]),
                                 X,y,scoring=self.scoring_metric, error_score="raise",cv=cv, n_jobs=-1)
+                    temp.append(np.mean(scores))
                 
             
         else:
             if self.meta_learner:
-                scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=self.meta_learner),X,y,error_score="raise",
+                temp=[]
+                for i in range(self.n_avg):
+                    scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=self.meta_learner),X,y,error_score="raise",
                                 scoring=self.scoring_metric, cv=cv, n_jobs=-1)
+                    temp.append(np.mean(scores))
             else:
-                scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=param['meta_learner'][1]),X,y,error_score="raise",
+                temp=[]
+                for i in range(self.n_avg):
+                    scores=cross_val_score(StackingRegressor(estimators=estims,final_estimator=param['meta_learner'][1]),X,y,error_score="raise",
                                 scoring=self.scoring_metric, cv=cv, n_jobs=-1)
+                    temp.append(np.mean(scores))
             
-        return np.mean(scores)
+        return np.mean(temp)
         
             
             
@@ -166,13 +179,14 @@ class Optuna_StackEnsemble_Search:
 #///////////////////////////////////// VOTING ///////////////////////////////////////////////////////////////////
 
 class Optuna_VotingEnsemble_Search:
-    def __init__(self,scoring_metric,direction,problem_type,ensemble_size=3,voting_type=None,models_list=[]):
+    def __init__(self,scoring_metric,direction,problem_type,ensemble_size=3,voting_type=None,models_list=[],n_avg=1):
         self.scoring_metric=scoring_metric
         self.direction=direction
         self.problem_type=problem_type
         self.size_stack=ensemble_size
         self.voting_type=voting_type
         self.models_list=models_list
+        self.n_avg=n_avg
         self.Regressors=[
              ExtraTreeRegressor(),
              DecisionTreeRegressor(),
@@ -234,14 +248,20 @@ class Optuna_VotingEnsemble_Search:
 
 
         if self.problem_type=='classification':
-            scores=cross_val_score(VotingClassifier(estimators=estims,voting=self.voting_type),
+            temp=[]
+            for i in range(self.n_avg):
+                scores=cross_val_score(VotingClassifier(estimators=estims,voting=self.voting_type),
                                 X,y,scoring=self.scoring_metric, error_score="raise",cv=cv, n_jobs=-1)
+                temp.append(np.mean(scores))
             
         else:
-            scores=cross_val_score(VotingRegressor(estimators=estims),X,y,error_score="raise",
+            temp=[]
+            for i in range(self.n_avg):
+                scores=cross_val_score(VotingRegressor(estimators=estims),X,y,error_score="raise",
                                 scoring=self.scoring_metric, cv=cv, n_jobs=-1)
+                temp.append(np.mean(scores))
             
-        return np.mean(scores)
+        return np.mean(temp)
         
             
             
@@ -293,13 +313,14 @@ class Optuna_VotingEnsemble_Search:
 
 class Optuna_Voting_weights_tuner:
 
-    def __init__(self,scoring_metric,direction,problem_type,models_list,voting_type=None,weights_list=[1,2,3]):
+    def __init__(self,scoring_metric,direction,problem_type,models_list,voting_type=None,weights_list=[1,2,3],n_avg=1):
         self.scoring_metric=scoring_metric
         self.direction=direction
         self.problem_type=problem_type
         self.models_list=models_list
         self.voting_type=voting_type
         self.weights_list=weights_list
+        self.n_avg=n_avg
 
     def objective_Voting_weights(self,trial,X,y,models_tps,N_folds,stratify,weights_l):
 
@@ -315,14 +336,20 @@ class Optuna_Voting_weights_tuner:
 
 
         if self.problem_type=='classification':
-            scores=cross_val_score(VotingClassifier(estimators=models_tps,voting=self.voting_type,weights=param['weights']),
+            temp=[]
+            for i in range(self.n_avg):
+                scores=cross_val_score(VotingClassifier(estimators=models_tps,voting=self.voting_type,weights=param['weights']),
                                 X,y,scoring=self.scoring_metric, error_score="raise",cv=cv, n_jobs=-1)
+                temp.append(np.mean(scores))
             
         else:
-            scores=cross_val_score(VotingRegressor(estimators=models_tps,weights=param['weights']),X,y,error_score="raise",
+            temp=[]
+            for i in range(self.n_avg):
+                scores=cross_val_score(VotingRegressor(estimators=models_tps,weights=param['weights']),X,y,error_score="raise",
                                 scoring=self.scoring_metric, cv=cv, n_jobs=-1)
+                temp.append(np.mean(scores))
             
-        return np.mean(scores)
+        return np.mean(temp)
         
     def fit(self,X,y,
                     n_trials,

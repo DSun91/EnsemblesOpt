@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: EnsemblesOpt
-Version: 0.0.9
+Version: 0.1.0
 Summary: Ensemble models creation trough Bayesian Optimization
 Author-email: Sunny Dial <dialsunny91@gmail.com>
 Project-URL: Homepage, https://github.com/DSun91/EnsemblesOpt

@@ -35,7 +35,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 class Bayesian_Voting_Ensemble:
     
-    def __init__(self,ensemble_size,models_list,xi,random_init_points,scoring,maximize_obj,task,type_p='soft',acquisition_func='PI'):
+    def __init__(self,ensemble_size,models_list,xi,random_init_points,scoring,maximize_obj,task,type_p='soft',acquisition_func='PI',n_avg=0):
         self.acquisition_func=acquisition_func
         self.size_problem=ensemble_size
         self.models_list=models_list
@@ -48,6 +48,7 @@ class Bayesian_Voting_Ensemble:
         self.points_done=[]
         self.points_vs=dict()
         self.counter=0
+        self.n_avg=n_avg
         self.type_p=type_p
         if self.acquisition_func=='UCB':
             self.lmda=float(input('select lambda value: '))
@@ -125,8 +126,11 @@ class Bayesian_Voting_Ensemble:
                 cv =StratifiedKFold(n_splits=self.Nfold,shuffle=True)
             else:
                 cv=self.Nfold
-            scores=cross_val_score(eclf1,self.X_train,self.y_train, scoring=self.scoring, cv=cv, n_jobs=-1,error_score="raise")  
-            err=np.mean(scores)
+            temp=[]
+            for i in range(self.n_avg):
+                scores=cross_val_score(eclf1,self.X_train,self.y_train, scoring=self.scoring, cv=cv, n_jobs=-1,error_score="raise")  
+                temp.append(np.mean(self.n_avg))
+            err=np.mean(temp)
             rsults.append(err)
         return rsults
     
