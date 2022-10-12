@@ -52,8 +52,8 @@ class Optuna_StackEnsemble_Search:
              BaggingRegressor(),
              ExtraTreesRegressor(),
              RandomForestRegressor(),
-             LinearDiscriminantAnalysis(),
-             LogisticRegression(),
+             #LinearDiscriminantAnalysis(),
+             #LogisticRegression(),
              LGBMRegressor(),
              CatBoostRegressor(),
              ]
@@ -198,8 +198,8 @@ class Optuna_VotingEnsemble_Search:
              BaggingRegressor(),
              ExtraTreesRegressor(),
              RandomForestRegressor(),
-             LinearDiscriminantAnalysis(),
-             LogisticRegression(),
+             #LinearDiscriminantAnalysis(),
+             #LogisticRegression(),
              LGBMRegressor(),
              CatBoostRegressor(),
              ]
